@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// Règles de sécurité Firestore pour les inscriptions PARAH
+// À copier dans : Console Firebase → Firestore Database → Règles
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Collection des inscriptions au programme "Le Mindset de l'Entrepreneur"
+    match /inscriptions/{document} {
+
+      // N'importe qui peut CRÉER une inscription depuis le site public,
+      // mais uniquement si les champs obligatoires sont présents et valides.
+      allow create: if request.resource.data.nom is string
+                    && request.resource.data.nom.size() > 1
+                    && request.resource.data.email is string
+                    && request.resource.data.email.matches('^[^@]+@[^@]+\\.[^@]+$')
+                    && request.resource.data.telephone is string
+                    && request.resource.data.telephone.size() > 5;
+
+      // Seul un administrateur CONNECTÉ (Firebase Auth) peut lire et supprimer
+      // les inscriptions, via la page admin.html. Le public ne peut rien lire.
+      allow read, delete: if request.auth != null;
+
+      // Personne ne peut modifier une inscription existante.
+      allow update: if false;
+    }
+  }
+}

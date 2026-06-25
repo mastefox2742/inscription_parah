@@ -1,0 +1,13 @@
+# Secrets / config locale — NE JAMAIS committer
+.env
+firebase-config.js
+
+# Vercel
+.vercel
+
+# Config locale Claude Code
+.claude
+
+# OS
+Thumbs.db
+.DS_Store

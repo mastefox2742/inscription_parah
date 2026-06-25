@@ -1,0 +1,17 @@
+# Secrets — ne JAMAIS déployer (ne doivent pas être accessibles via une URL)
+.env
+.env.example
+
+# Fichiers internes / sources
+.claude
+.git
+.gitignore
+generate-config.js
+code.html
+screen.png
+DESIGN.md
+LIVRAISON.md
+README.md
+firestore.rules
+
+# NB : firebase-config.js N'EST PAS ignoré — le navigateur en a besoin.
