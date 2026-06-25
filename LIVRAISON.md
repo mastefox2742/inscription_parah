@@ -24,27 +24,23 @@ Landing page d'inscription avec formulaire connecté à **Firebase Firestore**, 
 4. Roue dentée ⚙️ → **Paramètres du projet** → section **Tes applications** → icône **Web `</>`** → enregistre l'app (ex. « Site PARAH »).
 5. Firebase affiche un bloc `firebaseConfig` avec 6 valeurs. **Copie-les.**
 
-### Étape 2 — Brancher la config dans le site
+### Étape 2 — Brancher la config via `.env` (clés hors du code)
 
-Ouvre `index.html`, trouve le bloc `const firebaseConfig = {` (vers la fin) et **remplace les valeurs `VOTRE_...`** par celles copiées à l'étape 1.
+Les clés ne sont **pas écrites en dur** dans le code. Elles vivent dans un fichier `.env` (non committé, non déployé) qui sert à générer `firebase-config.js`.
 
-```js
-const firebaseConfig = {
-    apiKey: "...",            // ← tes vraies valeurs
-    authDomain: "...",
-    projectId: "...",
-    storageBucket: "...",
-    messagingSenderId: "...",
-    appId: "..."
-};
-```
+1. Copie `.env.example` en `.env`.
+2. Remplis les 6 valeurs Firebase copiées à l'étape 1.
+3. Génère le fichier que le navigateur utilise :
+   ```bash
+   node generate-config.js   # crée firebase-config.js depuis .env
+   ```
 
-> ℹ️ Ces clés Firebase Web sont **publiques par nature** — c'est normal qu'elles soient dans le code. La sécurité est assurée par les règles Firestore (`firestore.rules`), pas par le secret des clés.
+> ℹ️ Les clés Firebase **Web** ne sont pas des secrets (Google les conçoit pour le code client) : sur le site en ligne elles restent visibles dans le navigateur. Le `.env` sert surtout à **ne pas les committer** sur GitHub. La vraie sécurité = `firestore.rules` + Firebase Auth (+ App Check en option).
 
 ### Étape 3 — Déployer sur Vercel
 
-- **Option A (la plus simple)** : va sur [vercel.com](https://vercel.com) → **Add New → Project** → glisse le dossier, ou connecte un dépôt Git. Vercel détecte le site statique et génère une URL en ligne en ~1 min.
-- **Option B (en local)** : `npm i -g vercel` puis `vercel --prod` dans ce dossier.
+- **En local** : `node generate-config.js` puis `vercel --prod` dans ce dossier.
+- ⚠️ `.env` est exclu du déploiement (`.vercelignore`) ; `firebase-config.js` est déployé (le navigateur en a besoin).
 
 ---
 
